@@ -26,6 +26,22 @@ truncate table trips
 list @citibike_trips;
 
 
+// create the csv format for parsing records from s3
+CREATE OR REPLACE FILE FORMAT my_csv_format
+  TYPE = 'CSV'
+  COMPRESSION = 'AUTO'
+  FIELD_DELIMITER = ','
+  RECORD_DELIMITER = '\n'
+  SKIP_HEADER = 0
+  FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+  NULL_IF = ('', 'NULL')  -- Treat empty strings and the string 'NULL' as NULL values
+  TRIM_SPACE = FALSE
+  ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE
+  ESCAPE = NONE
+  ESCAPE_UNENCLOSED_FIELD = '\\'
+  DATE_FORMAT = 'AUTO'
+  TIMESTAMP_FORMAT = 'AUTO';	
+
 // load the data
 copy into trips from @citibike_trips
 file_format = my_csv_format;
